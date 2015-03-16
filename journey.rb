@@ -7,5 +7,6 @@ assistant = SpaceshipAssistant.new(ship)
 assistant.status
 assistant.fly(300)
 assistant.jump(3)
+assistant.fuel(5)
+assistant.jump(3)
 assistant.fly(400, 20000)
-assistant.jump(12)

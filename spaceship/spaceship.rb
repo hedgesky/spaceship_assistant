@@ -6,10 +6,10 @@ class Spaceship
   # attrs should include:
   #   :max_speed
   #   :max_jump_length
+  #   :max_fuel_amount
   def initialize(attrs)
     @engine = Components::Engine.new(attrs.fetch(:max_speed), attrs.fetch(:max_jump_length), attrs.fetch(:max_fuel_amount))
   end
-  
 
   def status
     ship_status = {}
@@ -28,6 +28,9 @@ class Spaceship
     @engine.fly(distance_in_km, speed)
   end
 
+  def fuel(fuel_amount)
+    @engine.fuel(fuel_amount)
+  end
 
   def components
     [@engine]

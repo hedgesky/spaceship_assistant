@@ -19,11 +19,12 @@ class Spaceship
         fuel_amount = distance_in_light_years
         raise Spaceship::NotEnoughFuel if fuel_amount > @fuel
         @fuel -= fuel_amount
+
         raise Spaceship::TooLongJumpDistance if distance_in_light_years > @max_jump_length
         distance_in_light_years
       end
 
-      def fly(distance_in_km,speed = nil)
+      def fly(distance_in_km, speed = nil)
         speed ||= @max_speed
         raise Spaceship::TooHighSpeed if speed > @max_speed
         distance_in_km

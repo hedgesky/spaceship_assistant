@@ -31,8 +31,13 @@ class SpaceshipAssistant
     rescue Spaceship::TooLongJumpDistance
       error 'Too long jump distance'
     rescue Spaceship::NotEnoughFuel
-      error 'Not enough fuel'  
+      error 'Not enough fuel'
     end
+  end
+
+  def fuel(fuel_amount)
+    @ship.fuel(fuel_amount)
+    say "Fueled by #{fuel_amount}"
   end
 
   private
