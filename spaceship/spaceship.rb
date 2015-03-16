@@ -7,8 +7,9 @@ class Spaceship
   #   :max_speed
   #   :max_jump_length
   def initialize(attrs)
-    @engine = Components::Engine.new(attrs.fetch(:max_speed), attrs.fetch(:max_jump_length))
+    @engine = Components::Engine.new(attrs.fetch(:max_speed), attrs.fetch(:max_jump_length), attrs.fetch(:max_fuel_amount))
   end
+  
 
   def status
     ship_status = {}
@@ -27,7 +28,6 @@ class Spaceship
     @engine.fly(distance_in_km, speed)
   end
 
-  private
 
   def components
     [@engine]

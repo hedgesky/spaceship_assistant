@@ -30,6 +30,8 @@ class SpaceshipAssistant
       say "Ship jumped by #{distance_in_light_years} light years"
     rescue Spaceship::TooLongJumpDistance
       error 'Too long jump distance'
+    rescue Spaceship::NotEnoughFuel
+      error 'Not enough fuel'  
     end
   end
 
