@@ -1,6 +1,9 @@
 class Spaceship
   module Components
     class Engine
+
+      attr_reader :fuel, :max_jump_length
+
       def initialize(max_speed, max_jump_length, max_fuel)
         @max_speed, @max_jump_length = max_speed.to_f, max_jump_length.to_f
         @max_fuel = max_fuel
@@ -11,8 +14,10 @@ class Spaceship
         :ok
       end
 
-      def fuel(fuel_amount)
-        @fuel += fuel_amount
+      def fuel!(fuel_amount)
+        fueled = [fuel_amount, @max_fuel - @fuel].min
+        @fuel += fueled
+        fueled
       end
 
       def jump(distance_in_light_years)

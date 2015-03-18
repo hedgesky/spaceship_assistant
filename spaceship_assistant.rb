@@ -1,46 +1,91 @@
-# a lot of awesome functionality will soon appear here
+# ABOUT:
+# This class hides architecture of underlying ship/universe system,
+# building all necessary objects and orchestrating them for user.
+
+require 'awesome_print'
+require './universe/presenters/map_as_table'
+
 class SpaceshipAssistant
 
   attr_reader :name, :ship
 
-  def initialize(ship, name='Znayka-1')
-    @name = name
-    @ship = ship
-    say 'Assistant initialized'
+  # required fields:
+  #   :ship
+  #   :map
+  #   :current_star_system
+  # optional fields:
+  #   :name - 'Znayka-1' by default
+  def initialize(attrs)
+    @ship = attrs.fetch(:ship)
+    @map = attrs.fetch(:map)
+    @current_star_system = attrs.fetch(:current_star_system)
+
+    @name = attrs[:name] || 'Znayka-1'
+    #we will go to Bharat
+    say 'Я инициализирован'
   end
 
   def status
     @ship.status.each do |component_name, status|
-      say "#{component_name} status is #{status}"
+      if status == :ok
+        say "#{component_name} в норме"
+      else
+        warning "#{component_name} не в порядке: #{status}"
+      end
     end
   end
 
-  def fly(distance_in_km, speed=nil)
-    begin
-      @ship.fly(distance_in_km, speed)
-      say "Ship flew #{distance_in_km} km"
-    rescue Spaceship::TooHighSpeed
-      error 'Too high speed'
-    end
+  # -------------
+  # NAVIGATION
+  # -------------
+
+  def show_map
+    marks = {@current_star_system => '*'}
+    puts
+    Universe::Presenters::MapAsTable.show(@map, marks)
+    puts
   end
 
-  def jump(distance_in_light_years)
+  def select_star_system_and_jump
+    selected_star_system = choose_from_array(accessible_systems, message: 'Куда летим?')
+    jump(selected_star_system)
+    @current_star_system = selected_star_system
+  end
+
+  # there is nothing in space systems yet, so there is no need to flying around in them
+  #
+  # def fly(distance_in_km, speed=nil)
+  #   begin
+  #     @ship.fly(distance_in_km, speed)
+  #     say "Ship flew #{distance_in_km} km"
+  #   rescue Spaceship::TooHighSpeed
+  #     error 'Too high speed'
+  #   end
+  # end
+
+  def jump(to)
+    distance = @current_star_system.distance_to(to)
     begin
-      @ship.jump(distance_in_light_years)
-      say "Ship jumped by #{distance_in_light_years} light years"
+      @ship.jump(distance)
+      say "Корабль прыгнул в систему #{to.name}"
     rescue Spaceship::TooLongJumpDistance
-      error 'Too long jump distance'
+      error 'Корабль не может прыгнуть так далеко'
     rescue Spaceship::NotEnoughFuel
-      error 'Not enough fuel'
+      error 'Недостаточно топлива'
     end
   end
 
-  def fuel(fuel_amount)
-    @ship.fuel(fuel_amount)
-    say "Fueled by #{fuel_amount}"
+  def fuel!(fuel_amount)
+    fueled = @ship.fuel!(fuel_amount)
+    say "Заправлен на #{fueled}"
   end
 
   private
+
+  def accessible_systems
+    limiting_factor = [@ship.fuel, @ship.max_jump_length].min
+    @map.accessible_systems(@current_star_system, limiting_factor)
+  end
 
   def say(message)
     puts "#{name}: #{message}"

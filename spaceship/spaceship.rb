@@ -28,8 +28,16 @@ class Spaceship
     @engine.fly(distance_in_km, speed)
   end
 
-  def fuel(fuel_amount)
-    @engine.fuel(fuel_amount)
+  def fuel!(fuel_amount)
+    @engine.fuel!(fuel_amount)
+  end
+
+  def fuel
+    @engine.fuel
+  end
+
+  def max_jump_length
+    @engine.max_jump_length
   end
 
   def components
