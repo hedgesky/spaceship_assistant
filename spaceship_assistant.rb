@@ -1,9 +1,9 @@
+# encoding: utf-8
 # ABOUT:
 # This class hides architecture of underlying ship/universe system,
 # building all necessary objects and orchestrating them for user.
 
-require 'awesome_print'
-require './universe/presenters/map_as_table'
+require_relative 'universe/presenters/map_as_table.rb'
 
 class SpaceshipAssistant
 

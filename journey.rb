@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative 'lib/input_utils'
 require_relative 'universe/map'
 require_relative 'spaceship/spaceship'

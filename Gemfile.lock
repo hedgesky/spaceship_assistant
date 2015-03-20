@@ -1,11 +1,12 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     awesome_print (1.6.1)
     terminal-table (1.4.5)
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   awesome_print

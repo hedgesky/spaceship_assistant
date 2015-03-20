@@ -1,5 +1,4 @@
-source 'https://rubygems.org'
-ruby '2.1.2'
+source 'http://rubygems.org'
 
 gem 'terminal-table'
 gem 'awesome_print'
