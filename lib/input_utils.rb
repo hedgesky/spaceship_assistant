@@ -17,6 +17,10 @@ module InputUtils
   end
 
   def choose_index_from_array(array, attrs={})
+    if array.empty?
+      puts 'нет элементов'
+      return nil
+    end
     array.each_with_index do |item, i|
       puts "#{i+1}. #{item}"
     end

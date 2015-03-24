@@ -47,6 +47,10 @@ class SpaceshipAssistant
   end
 
   def select_star_system_and_jump
+    if accessible_systems.empty?
+      puts 'Нет целей для прыжка'
+      return
+    end
     selected_star_system = choose_from_array(accessible_systems, message: 'Куда летим?')
     jump(selected_star_system)
     @current_star_system = selected_star_system
@@ -75,9 +79,24 @@ class SpaceshipAssistant
     end
   end
 
-  def fuel!(fuel_amount)
+  def fuel!
+    fuel_amount = get_integer(message: 'На сколько заправлять?')
     fueled = @ship.fuel!(fuel_amount)
     say "Заправлен на #{fueled}"
+  end
+
+  def choose_next_action
+    next_action = choose_from_hash({
+      select_star_system_and_jump: 'Совершить прыжок',
+      fuel!: 'Заправиться',
+      show_map: 'Показать карту',
+      show_accessible_systems: 'Показать доступные для прыжка системы'
+    })
+    send(next_action)
+  end
+
+  def show_accessible_systems
+    puts accessible_systems
   end
 
   private

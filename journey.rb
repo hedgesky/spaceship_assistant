@@ -14,11 +14,10 @@ assistant = SpaceshipAssistant.new(
   current_star_system: map.find('Солнце')
 )
 
-assistant.status
-assistant.show_map
-
-fuel_amount = get_integer(message: 'На сколько заправлять?')
-
-assistant.fuel!(fuel_amount)
-assistant.select_star_system_and_jump
-assistant.show_map
+# assistant.status
+# assistant.show_map
+# assistant.fuel!(fuel_amount)
+# assistant.select_star_system_and_jump
+# assistant.show_map
+# assistant.show_accessible_systems
+assistant.choose_next_action
