@@ -14,10 +14,4 @@ assistant = SpaceshipAssistant.new(
   current_star_system: map.find('Солнце')
 )
 
-# assistant.status
-# assistant.show_map
-# assistant.fuel!(fuel_amount)
-# assistant.select_star_system_and_jump
-# assistant.show_map
-# assistant.show_accessible_systems
-assistant.choose_next_action
+assistant.start_journey

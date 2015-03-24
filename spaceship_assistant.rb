@@ -22,6 +22,8 @@ class SpaceshipAssistant
 
     @name = attrs[:name] || 'Znayka-1'
     #we will go to Bharat
+
+    @ship.fuel!(10)
     say 'Я инициализирован'
   end
 
@@ -40,7 +42,13 @@ class SpaceshipAssistant
   # -------------
 
   def show_map
-    marks = {@current_star_system => '*'}
+    marks = {}
+    accessible_systems.each do |system|
+      marks[system] = '+'
+    end
+
+    marks[@current_star_system] = '*'
+
     puts
     Universe::Presenters::MapAsTable.show(@map, marks)
     puts
@@ -67,18 +75,6 @@ class SpaceshipAssistant
   #   end
   # end
 
-  def jump(to)
-    distance = @current_star_system.distance_to(to)
-    begin
-      @ship.jump(distance)
-      say "Корабль прыгнул в систему #{to.name}"
-    rescue Spaceship::TooLongJumpDistance
-      error 'Корабль не может прыгнуть так далеко'
-    rescue Spaceship::NotEnoughFuel
-      error 'Недостаточно топлива'
-    end
-  end
-
   def fuel!
     fuel_amount = get_integer(message: 'На сколько заправлять?')
     fueled = @ship.fuel!(fuel_amount)
@@ -90,13 +86,20 @@ class SpaceshipAssistant
       select_star_system_and_jump: 'Совершить прыжок',
       fuel!: 'Заправиться',
       show_map: 'Показать карту',
-      show_accessible_systems: 'Показать доступные для прыжка системы'
+      show_accessible_systems: 'Показать доступные для прыжка системы',
+      quit: 'Закончить'
     })
-    send(next_action)
+
+    send(next_action) if next_action != :quit
+    next_action
   end
 
-  def show_accessible_systems
-    puts accessible_systems
+  def start_journey
+    loop do
+      say 'Ожидаю приказов'
+      break if choose_next_action == :quit
+      puts '   -------   '
+    end
   end
 
   private
@@ -104,6 +107,18 @@ class SpaceshipAssistant
   def accessible_systems
     limiting_factor = [@ship.fuel, @ship.max_jump_length].min
     @map.accessible_systems(@current_star_system, limiting_factor)
+  end
+
+  def jump(to)
+    distance = @current_star_system.distance_to(to)
+    begin
+      @ship.jump(distance)
+      say "Корабль прыгнул в систему #{to.name}"
+    rescue Spaceship::TooLongJumpDistance
+      error 'Корабль не может прыгнуть так далеко'
+    rescue Spaceship::NotEnoughFuel
+      error 'Недостаточно топлива'
+    end
   end
 
   def say(message)
