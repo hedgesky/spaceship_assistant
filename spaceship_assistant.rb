@@ -4,6 +4,7 @@
 # building all necessary objects and orchestrating them for user.
 
 require_relative 'universe/presenters/map_as_table.rb'
+require 'colorize'
 
 class SpaceshipAssistant
 
@@ -92,7 +93,9 @@ class SpaceshipAssistant
     rows = []
 
     ships = ship.current_star_system.ships.map do |ship|
-      "#{ship.name} (#{ship.ai.attitude})"
+      attitude = ship.ai.attitude
+
+      "#{ship.name} (#{})"
     end.join("\n")
 
     rows << ["Корабли в системе:\n", ships]
