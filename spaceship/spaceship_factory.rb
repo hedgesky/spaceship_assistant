@@ -1,5 +1,5 @@
 require_relative 'spaceship'
-require 'singleton'
+require_relative '../ai/ai'
 
 class SpaceshipFactory
 
@@ -8,23 +8,25 @@ class SpaceshipFactory
     @default_star_system = attrs.fetch(:default_star_system)
   end
 
-  def build_ship(code, attrs={})
-    raise 'Неверный код корабля' unless available_ships.include?(code)
+  def build_ship(ship_class, attrs={})
+    raise 'Неверный код корабля' unless available_ship_classes.include?(ship_class)
 
     attrs[:name] ||= random_name
     attrs[:map] = @map
     attrs[:current_star_system] ||= @default_star_system
 
-    attrs.merge!(special_attrs_for_code(code))
+    attrs.merge!(special_attrs_for_ship_class(ship_class))
 
-    Spaceship.new(attrs)
+    ship = Spaceship.new(attrs)
+    ship.ai = Ai.new
+    ship
   end
 
 
   private
 
-    def special_attrs_for_code(code)
-      send(code)
+    def special_attrs_for_ship_class(ship_class)
+      send(ship_class)
     end
 
     AVAILABLE_NAMES = %w(John Nick Camelot Vampire Albus Potter Watson Sherlock EachEach CabbageKnight Hedgesky Rubier)
@@ -37,7 +39,7 @@ class SpaceshipFactory
     end
 
 
-    def available_ships
+    def available_ship_classes
       [:user, :enemy, :trade]
     end
 

@@ -7,6 +7,7 @@ class Spaceship
   extend Forwardable
 
   attr_reader :name
+  attr_accessor :ai
 
   delegate({
     [:fuel_amount, :max_fuel_amount, :max_jump_length, :jump_light_years!, :fuel!] => :engine,
@@ -22,8 +23,8 @@ class Spaceship
   #   :current_star_system
   def initialize(attrs)
     @name = attrs.fetch(:name)
-    @engine = Components::Engine.new(attrs.fetch(:max_speed), attrs.fetch(:max_jump_length), attrs.fetch(:max_fuel_amount))
-    @navigator = Components::Navigator.new(self, attrs.fetch(:map), attrs.fetch(:current_star_system))
+    @engine = Engine.new(attrs.fetch(:max_speed), attrs.fetch(:max_jump_length), attrs.fetch(:max_fuel_amount))
+    @navigator = Navigator.new(self, attrs.fetch(:map), attrs.fetch(:current_star_system))
   end
 
 

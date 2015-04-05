@@ -23,6 +23,21 @@ class SpaceshipAssistant
     say 'Я инициализирован'
   end
 
+  def start_journey
+    trap("INT") { puts "\nДо новых встреч!"; exit}
+    loop do
+      begin
+        say 'Ожидаю приказов'
+        break if choose_next_action == :quit
+        puts "\n"*3
+      rescue ActionCancelled
+        puts 'Действие отменено'
+        puts
+      end
+    end
+    puts "\nДо новых встреч!"
+  end
+
   def status
     engine_status = [
       "Топливо: #{ship.fuel_amount} / #{ship.max_fuel_amount}",
@@ -72,33 +87,34 @@ class SpaceshipAssistant
     say "Заправлен на #{fueled}"
   end
 
+  def show_current_system_info
+    title = ship.current_star_system.name
+    rows = []
+
+    ships = ship.current_star_system.ships.map do |ship|
+      "#{ship.name} (#{ship.ai.attitude})"
+    end.join("\n")
+
+    rows << ["Корабли в системе:\n", ships]
+
+    puts Terminal::Table.new(rows: rows, title: title)
+  end
+
+  private
+
   def choose_next_action
     next_action = choose_from_hash({
       status: 'Состояние корабля',
       select_star_system_and_jump: 'Совершить прыжок',
       select_fuel_amount_and_fuel: 'Заправиться',
       show_map: 'Показать карту',
+      show_current_system_info: 'Информация о текущей системе',
       quit: 'Закончить'
     })
 
     send(next_action) if next_action != :quit
     next_action
   end
-
-  def start_journey
-    loop do
-      begin
-        say 'Ожидаю приказов'
-        break if choose_next_action == :quit
-        puts "\n"*3
-      rescue ActionCancelled
-        puts 'Действие отменено'
-        puts
-      end
-    end
-  end
-
-  private
 
   def jump(to)
     begin
