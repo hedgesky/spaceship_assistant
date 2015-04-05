@@ -11,6 +11,6 @@ sun = map.find('Солнце')
 factory = SpaceshipFactory.new(map: map, default_star_system: sun)
 map.populate_ships_with_factory!(factory)
 
-player_ship = factory.build_ship(:user, name: 'My super-mega ship 2000 Limited Pro Edition')
+player_ship = factory.build_ship(:user, name: 'Энтерпрайз')
 assistant = SpaceshipAssistant.new(ship: player_ship)
 assistant.start_journey

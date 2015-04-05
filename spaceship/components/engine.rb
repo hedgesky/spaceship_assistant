@@ -2,11 +2,11 @@ class Spaceship
   module Components
     class Engine
 
-      attr_reader :fuel_amount, :max_jump_length
+      attr_reader :fuel_amount, :max_fuel_amount, :max_jump_length
 
-      def initialize(max_speed, max_jump_length, max_fuel)
+      def initialize(max_speed, max_jump_length, max_fuel_amount)
         @max_speed, @max_jump_length = max_speed.to_f, max_jump_length.to_f
-        @max_fuel = max_fuel
+        @max_fuel_amount = max_fuel_amount
         @fuel_amount = 0
       end
 
@@ -15,7 +15,7 @@ class Spaceship
       end
 
       def fuel!(fuel_amount)
-        fueled = [fuel_amount, @max_fuel - @fuel_amount].min
+        fueled = [fuel_amount, @max_fuel_amount - @fuel_amount].min
         @fuel_amount += fueled
         fueled
       end

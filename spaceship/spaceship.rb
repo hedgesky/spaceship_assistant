@@ -9,7 +9,7 @@ class Spaceship
   attr_reader :name
 
   delegate({
-    [:fuel_amount, :max_jump_length, :jump_light_years!, :fuel!] => :engine,
+    [:fuel_amount, :max_fuel_amount, :max_jump_length, :jump_light_years!, :fuel!] => :engine,
     [:accessible_systems, :current_star_system, :map, :jump!] => :navigator
   })
 
@@ -26,19 +26,13 @@ class Spaceship
     @navigator = Components::Navigator.new(self, attrs.fetch(:map), attrs.fetch(:current_star_system))
   end
 
-  def status
-    ship_status = {}
-    components.map do |component|
-      ship_status[component.name] = component.status
-    end
-    ship_status
-  end
+
+  private
+
+  attr_reader :engine, :navigator
 
   def components
     [@engine]
   end
 
-  private
-
-  attr_reader :engine, :navigator
 end
