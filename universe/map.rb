@@ -23,6 +23,14 @@ module Universe
       @star_systems.detect {|s| s.name == name}
     end
 
+    def populate_ships_with_factory!(factory)
+      @star_systems.each do |system|
+        system.ships = Array.new(4) do
+          factory.build_ship(:enemy, current_star_system: system)
+        end
+      end
+    end
+
     private
 
     def load_from_file(file)

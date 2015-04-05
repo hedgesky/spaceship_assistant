@@ -4,6 +4,7 @@
 # building all necessary objects and orchestrating them for user.
 
 require_relative 'universe/presenters/map_as_table.rb'
+require 'byebug'
 
 class SpaceshipAssistant
 
@@ -14,16 +15,14 @@ class SpaceshipAssistant
   #   :map
   #   :current_star_system
   # optional fields:
-  #   :name - 'Znayka-1' by default
+  #   :name - @ship.name by default
   def initialize(attrs)
     @ship = attrs.fetch(:ship)
-    @map = attrs.fetch(:map)
-    @current_star_system = attrs.fetch(:current_star_system)
+    @ship.fuel!(10)
 
     @name = attrs[:name] || 'Znayka-1'
     #we will go to Bharat
 
-    @ship.fuel!(10)
     say 'Я инициализирован'
   end
 
@@ -43,40 +42,28 @@ class SpaceshipAssistant
 
   def show_map
     marks = {}
-    accessible_systems.each do |system|
+    ship.accessible_systems.each do |system|
       marks[system] = '+'
     end
 
-    marks[@current_star_system] = '*'
+    marks[current_star_system] = '*'
 
     puts
-    Universe::Presenters::MapAsTable.show(@map, marks)
+    Universe::Presenters::MapAsTable.show(map, marks)
     puts
   end
 
   def select_star_system_and_jump
-    if accessible_systems.empty?
+    if ship.accessible_systems.empty?
       puts 'Нет целей для прыжка'
       return
     end
-    selected_star_system = choose_from_array(accessible_systems, message: 'Куда летим?')
+    selected_star_system = choose_from_array(ship.accessible_systems, message: 'Куда летим?: ')
     jump(selected_star_system)
-    @current_star_system = selected_star_system
   end
 
-  # there is nothing in space systems yet, so there is no need to flying around in them
-  #
-  # def fly(distance_in_km, speed=nil)
-  #   begin
-  #     @ship.fly(distance_in_km, speed)
-  #     say "Ship flew #{distance_in_km} km"
-  #   rescue Spaceship::TooHighSpeed
-  #     error 'Too high speed'
-  #   end
-  # end
-
   def fuel!
-    fuel_amount = get_integer(message: 'На сколько заправлять?')
+    fuel_amount = get_integer(message: 'На сколько заправлять?: ')
     fueled = @ship.fuel!(fuel_amount)
     say "Заправлен на #{fueled}"
   end
@@ -104,15 +91,24 @@ class SpaceshipAssistant
 
   private
 
-  def accessible_systems
-    limiting_factor = [@ship.fuel, @ship.max_jump_length].min
-    @map.accessible_systems(@current_star_system, limiting_factor)
+  def show_accessible_systems
+    @ship.accessible_systems.each_with_index do |system, i|
+      puts "#{i+1}. #{system.name}"
+    end
+    puts
+  end
+
+  def map
+    @ship.map
+  end
+
+  def current_star_system
+    @ship.current_star_system
   end
 
   def jump(to)
-    distance = @current_star_system.distance_to(to)
     begin
-      @ship.jump(distance)
+      @ship.jump!(to)
       say "Корабль прыгнул в систему #{to.name}"
     rescue Spaceship::TooLongJumpDistance
       error 'Корабль не может прыгнуть так далеко'

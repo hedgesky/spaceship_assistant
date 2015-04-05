@@ -25,7 +25,7 @@ module InputUtils
       puts "#{i+1}. #{item}"
     end
 
-    puts attrs[:message] || 'Выберите элемент из списка'
+    print attrs[:message] || 'Выберите элемент из списка: '
     choice = nil
     loop do
       choice = gets.to_i
@@ -43,19 +43,19 @@ module InputUtils
   #   :message
   #   :quite
   def get_parameter(attrs={})
-    puts attrs[:message] || 'Введите параметр' unless attrs[:quite]
+    print attrs[:message] || 'Введите параметр: ' unless attrs[:quite]
     gets.strip
   end
 
   def get_integer(attrs={})
-    puts attrs[:message] || 'Введите число' unless attrs[:quite]
+    print attrs[:message] || 'Введите число: ' unless attrs[:quite]
 
     int = nil
     until int do
       begin
         int = Integer(get_parameter(quite: true))
       rescue ArgumentError
-        puts 'Введите число'
+        print 'Введите число: '
       end
     end
     int

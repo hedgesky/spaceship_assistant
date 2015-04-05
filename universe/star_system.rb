@@ -1,7 +1,10 @@
+require_relative '../spaceship/spaceship_factory'
+
 module Universe
   class StarSystem
 
     attr_reader :name, :x, :y
+    attr_accessor :ships
 
     def initialize(name, x, y)
       raise 'x should be >= 0' if x < 0
@@ -16,5 +19,6 @@ module Universe
     def to_s
       name
     end
+
   end
 end
