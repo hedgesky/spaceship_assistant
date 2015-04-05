@@ -58,7 +58,7 @@ class SpaceshipAssistant
       puts 'Нет целей для прыжка'
       return
     end
-    selected_star_system = choose_from_array(ship.accessible_systems, message: 'Куда летим?: ')
+    selected_star_system = choose_index_from_table(ship.accessible_systems, message: 'Куда летим?: ')
     jump(selected_star_system)
   end
 
@@ -83,19 +83,22 @@ class SpaceshipAssistant
 
   def start_journey
     loop do
-      say 'Ожидаю приказов'
-      break if choose_next_action == :quit
-      puts '   -------   '
+      begin
+        say 'Ожидаю приказов'
+        break if choose_next_action == :quit
+        puts '   -------   '
+      rescue ActionCancelled
+        puts 'Действие отменено'
+        puts
+      end
     end
   end
 
   private
 
   def show_accessible_systems
-    @ship.accessible_systems.each_with_index do |system, i|
-      puts "#{i+1}. #{system.name}"
-    end
-    puts
+    systems = @ship.accessible_systems.map(&:name)
+    table_from_array(systems, 'Доступные системы')
   end
 
   def map
