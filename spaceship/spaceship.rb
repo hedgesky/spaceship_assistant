@@ -1,10 +1,12 @@
 require_relative 'components/engine.rb'
 require_relative 'components/navigator.rb'
+require_relative 'presenters/name_with_attitude.rb'
 require_relative 'exceptions.rb'
 require 'forwardable'
 
 class Spaceship
   extend Forwardable
+  include NameWithAttitude
 
   attr_reader :name
   attr_accessor :ai

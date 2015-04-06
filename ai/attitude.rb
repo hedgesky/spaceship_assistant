@@ -33,5 +33,9 @@ class Ai
       end
     end
 
+    def to_sym
+      @attitude
+    end
+
   end
 end

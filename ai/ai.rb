@@ -12,4 +12,8 @@ class Ai
   def communicator
     @communicator ||= Communicator.new
   end
+
+  def greeting(ship_name)
+    communicator.greeting(@attitude.to_sym, ship_name)
+  end
 end

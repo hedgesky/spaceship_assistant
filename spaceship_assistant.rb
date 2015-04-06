@@ -62,7 +62,6 @@ class SpaceshipAssistant
 
     marks[@ship.current_star_system] = '*'
 
-    puts
     Universe::Presenters::MapAsTable.show(@ship.map, marks)
     puts
     puts '* – Текущая система'
@@ -74,7 +73,7 @@ class SpaceshipAssistant
       puts 'Нет целей для прыжка'
       return
     end
-    selected_star_system = choose_index_from_table(
+    selected_star_system = choose_from_table(
       ship.accessible_systems,
       message: 'Куда летим?: ',
       title: 'Доступные системы'
@@ -89,32 +88,37 @@ class SpaceshipAssistant
   end
 
   def show_current_system_info
-    title = ship.current_star_system.name
-    rows = []
+    ships = ship.current_star_system.ships.map(&:name_with_attitude).join("\n")
+    rows = [["Корабли в системе:\n", ships]]
+    puts Terminal::Table.new(rows: rows, title: ship.current_star_system.name)
+  end
 
-    ships = ship.current_star_system.ships.map do |ship|
-      attitude = ship.ai.attitude
+  def select_ship_and_talk
+    attrs = {
+      title: 'Корабли в текущей системе',
+      welcome_message: 'С кем связаться? :'
+    }
+    selected_ship = choose_from_table(ship.current_star_system.ships, attrs) do |s|
+      s.name_with_attitude
+    end
 
-      "#{ship.name} (#{})"
-    end.join("\n")
-
-    rows << ["Корабли в системе:\n", ships]
-
-    puts Terminal::Table.new(rows: rows, title: title)
+    puts "\n#{selected_ship.colorized_name}: #{selected_ship.ai.greeting(ship.name)}"
   end
 
   private
 
   def choose_next_action
-    next_action = choose_from_hash({
+    next_action = choose_from_table({
       status: 'Состояние корабля',
+      show_map: 'Показать карту',
       select_star_system_and_jump: 'Совершить прыжок',
       select_fuel_amount_and_fuel: 'Заправиться',
-      show_map: 'Показать карту',
       show_current_system_info: 'Информация о текущей системе',
+      select_ship_and_talk: 'Связаться с кораблем',
       quit: 'Закончить'
-    })
+    }, without_cancel: true, title: 'Выберите действие')
 
+    puts
     send(next_action) if next_action != :quit
     next_action
   end
@@ -123,6 +127,7 @@ class SpaceshipAssistant
     begin
       @ship.jump!(to)
       say "Корабль прыгнул в систему #{to.name}"
+      show_map
     rescue Spaceship::TooLongJumpDistance
       error 'Корабль не может прыгнуть так далеко'
     rescue Spaceship::NotEnoughFuel
