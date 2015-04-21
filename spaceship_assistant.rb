@@ -4,7 +4,6 @@
 # building all necessary objects and orchestrating them for user.
 
 require_relative 'universe/presenters/map_as_table.rb'
-require 'colorize'
 
 class SpaceshipAssistant
 

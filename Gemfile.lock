@@ -3,6 +3,7 @@ GEM
   specs:
     awesome_print (1.6.1)
     colorize (0.7.5)
+    os (0.9.6)
     terminal-table (1.4.5)
 
 PLATFORMS
@@ -12,4 +13,5 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   colorize
+  os
   terminal-table

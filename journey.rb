@@ -1,4 +1,5 @@
 # encoding: utf-8
+require_relative 'initializers/patch_colorize'
 require_relative 'lib/input_utils'
 require_relative 'universe/map'
 require_relative 'spaceship/spaceship_factory'

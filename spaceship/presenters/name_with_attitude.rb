@@ -1,5 +1,3 @@
-require 'colorize'
-
 class Spaceship
   module NameWithAttitude
     def name_with_attitude
