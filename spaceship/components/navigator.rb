@@ -14,9 +14,10 @@ class Spaceship
     end
 
     def jump!(to)
-      distance = @current_star_system.distance_to(to)
+      distance = @current_star_system.distance_to(to).round
       @ship.jump_light_years!(distance)
       @current_star_system = to
+      puts distance
     end
 
   end

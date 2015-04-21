@@ -83,8 +83,12 @@ class SpaceshipAssistant
 
   def select_fuel_amount_and_fuel
     fuel_amount = get_integer(message: 'На сколько заправлять?: ')
-    fueled = @ship.fuel!(fuel_amount)
-    say "Заправлен на #{fueled}"
+    begin
+      fueled = @ship.fuel!(fuel_amount)
+      say "Заправлен на #{fueled}"
+    rescue Spaceship::NotEnoughEmptySpaceInTheTank
+      puts 'Не хватает места в топливном баке!'
+    end
   end
 
   def show_current_system_info
@@ -102,7 +106,8 @@ class SpaceshipAssistant
       s.name_with_attitude
     end
 
-    puts "\n#{selected_ship.colorized_name}: #{selected_ship.ai.greeting(ship.name)}"
+   puts "\n#{selected_ship.colorized_name}: #{selected_ship.ai.greeting(ship.name)}"
+    # puts "\n#{selected_ship.name}: #{selected_ship.ai.greeting(ship.name)}"
   end
 
   private

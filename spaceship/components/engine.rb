@@ -16,6 +16,7 @@ class Spaceship
     def fuel!(fuel_amount)
       fueled = [fuel_amount, @max_fuel_amount - @fuel_amount].min
       @fuel_amount += fueled
+      raise Spaceship::NotEnoughEmptySpaceInTheTank if fuel_amount > max_fuel_amount
       fueled
     end
 
