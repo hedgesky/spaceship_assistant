@@ -1,0 +1,13 @@
+# encoding: utf-8
+-
+  :name: Апельсин
+  :average_cost: 80
+  :weight: 1
+-
+  :name: Гранит
+  :average_cost: 350
+  :weight: 10
+-
+  :name: Зубная паста
+  :average_cost: 40
+  :weight: 0.5

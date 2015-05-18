@@ -15,8 +15,6 @@ class SpaceshipAssistant
   #   :name - @ship.name by default
   def initialize(attrs)
     @ship = attrs.fetch(:ship)
-    @ship.fuel!(10)
-
     @name = attrs[:name] || @ship.name
     #we will go to Bharat
 
@@ -44,7 +42,13 @@ class SpaceshipAssistant
       "Макс. длина прыжка: #{ship.max_jump_length}"
     ].join("\n")
 
-    rows = [['Двигатель', engine_status]]
+    cargoes = @ship.cargoes.map(&:name).join("\n")
+
+    rows = [
+      ['Двигатель', engine_status],
+      :separator,
+      ['Груз', cargoes]
+    ]
 
     puts Terminal::Table.new(rows: rows, title: 'Состояние корабля')
   end

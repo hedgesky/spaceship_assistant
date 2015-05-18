@@ -8,10 +8,9 @@ require_relative 'spaceship_assistant'
 include InputUtils
 
 map = Universe::Map.new
-sun = map.find('Солнце')
-factory = SpaceshipFactory.new(map: map, default_star_system: sun)
+factory = SpaceshipFactory.new(map: map)
 map.populate_ships_with_factory!(factory)
 
-player_ship = factory.build_ship(:user, name: 'Энтерпрайз')
+player_ship = factory.build_ship(:user, name: 'Энтерпрайз', current_star_system: map.find('Солнце'))
 assistant = SpaceshipAssistant.new(ship: player_ship)
 assistant.start_journey
